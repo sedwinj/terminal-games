@@ -1,6 +1,7 @@
 #include "Suit.hpp"
 
-auto Suit::suits = Suit::buildSuits();
+// std::vector<Suit> Suit::suits = Suit::buildSuits();
+std::vector<Suit> Suit::suits = std::vector<Suit>();
 
 Suit::Suit(std::string name, Color color) : name(name), color(color) {}
 

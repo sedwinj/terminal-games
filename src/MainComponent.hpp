@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "Card/Suit.hpp"
+
 class MainComponent
 {
 public:
