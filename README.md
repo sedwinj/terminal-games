@@ -6,10 +6,11 @@ An experimental project to see how many basic games I can replicate using only t
 To compile, run the following code from the root directory:
 
 ```sh
+rm -r build # optional
 mkdir build
 cd build
-cmake ../src
+cmake ..
 cmake --build .
 ```
 
-Then execute `terminal-games` from the build directory.
+Then execute `terminal-games` from the bin directory.
