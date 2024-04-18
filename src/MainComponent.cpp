@@ -3,7 +3,7 @@
 int MainComponent::main(int argc, char **argv)
 {
   // auto suits = Suit::getSuits();
-  auto suits = Suit::buildSuits();
+  auto suits = Suit::getSuits();
   for (Suit suit : suits)
   {
     std::cout << suit.toString() << '\n';

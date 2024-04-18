@@ -1,11 +1,10 @@
 #include "Suit.hpp"
 
-// std::vector<Suit> Suit::suits = Suit::buildSuits();
-std::vector<Suit> Suit::suits = std::vector<Suit>();
+std::vector<Suit> Suit::suits = Suit::buildSuits();
 
 Suit::Suit(std::string name, Color color) : name(name), color(color) {}
 
-const std::vector<Suit> &Suit::buildSuits()
+const std::vector<Suit> Suit::buildSuits()
 {
   auto suits = std::vector<Suit>();
   suits.push_back(Suit("Hearts", Color::RED));
