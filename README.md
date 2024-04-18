@@ -13,4 +13,4 @@ cmake ..
 cmake --build .
 ```
 
-Then execute `terminal-games` from the bin directory.
+Then execute `/bin/terminal-games`.
