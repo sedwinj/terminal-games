@@ -1,0 +1,1 @@
+add_library(Card_Test OBJECT Suit.cpp)

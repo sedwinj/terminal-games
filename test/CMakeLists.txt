@@ -1,24 +1,17 @@
-Include(FetchContent)
 
-FetchContent_Declare(
-    Catch2
-    GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-    GIT_TAG v3.4.0
+add_subdirectory(Card)
+
+add_executable(tests main.cpp)
+target_link_libraries(tests PRIVATE
+    terminal_games
+    Card_Test
 )
 
-FetchContent_MakeAvailable(Catch2)
-
-option(MAKE_TESTS ON)
-if(MAKE_TESTS)
-    add_executable(terminal-games-test
-        test.cpp
-    )
-    target_link_libraries(terminal-games-test PUBLIC test)
-    target_include_directories(terminal-games-test PUBLIC
-        "${PROJECT_BINARY_DIR}"
-        # "${PROJECT_SOURCE_DIR}/Card"
+option(POST_TEST "Will test after building Catch suite when set to ON." ON)
+if(POST_TEST)
+    add_custom_command(TARGET tests
+        COMMAND tests
+        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/../bin
+        COMMENT "Running post-build tests..."
     )
 endif()
-
-add_executable(terminal-games-test test.cpp)
-target_link_libraries(terminal-games-test PRIVATE Catch2::Catch2WithMain)
