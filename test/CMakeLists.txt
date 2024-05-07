@@ -3,7 +3,7 @@ add_subdirectory(Card)
 
 add_executable(tests main.cpp)
 target_link_libraries(tests PRIVATE
-    terminal_games
+    src
     Card_Test
 )
 
