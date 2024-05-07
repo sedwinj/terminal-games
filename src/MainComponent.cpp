@@ -2,13 +2,6 @@
 
 int MainComponent::main(int argc, char **argv)
 {
-  // auto suits = Suit::getSuits();
-  auto suits = Suit::getSuits();
-  for (Suit suit : suits)
-  {
-    std::cout << suit.toString() << '\n';
-  }
-  std::cout << std::endl;
-
+  std::cout << "Hello World!" << std::endl;
   return EXIT_SUCCESS;
 }

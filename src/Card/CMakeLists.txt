@@ -1,1 +1,1 @@
-add_library(Card Card.cpp Suit.cpp)
+add_library(Card Card.cpp)
