@@ -4,7 +4,7 @@
     {
       "label": "build",
       "type": "shell",
-      "command": "cd build && cmake ../src && cmake --build ."
+      "command": "cmake -S . -B build && cmake --build build"
     }
   ]
 }

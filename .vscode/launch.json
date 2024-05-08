@@ -5,10 +5,18 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug",
+      "name": "terminal-games",
       "type": "lldb",
       "request": "launch",
-      "program": "./build/terminal-games",
+      "program": "./bin/terminal-games",
+      "cwd": "${workspaceRoot}",
+      "preLaunchTask": "build"
+    },
+    {
+      "name": "tests",
+      "type": "lldb",
+      "request": "launch",
+      "program": "./bin/tests",
       "cwd": "${workspaceRoot}",
       "preLaunchTask": "build"
     }
