@@ -35,7 +35,6 @@ namespace Util
     {
       if (!contains<char>(WHITESPACE, str[start]))
       {
-        start--;
         break;
       }
     }

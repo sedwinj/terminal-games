@@ -4,7 +4,7 @@
 
 #include "src/Util.hpp"
 
-TEST_CASE("contains")
+TEST_CASE("contains", "[Util]")
 {
   char _letters[] = "abcde";
   auto letters = std::vector<char>(_letters, _letters + 5);
@@ -20,4 +20,10 @@ TEST_CASE("contains")
   auto numbers = std::vector<int>(_numbers, _numbers + 5);
   REQUIRE(Util::contains<int>(numbers, 3));
   REQUIRE(!Util::contains<int>(numbers, 6));
+}
+
+TEST_CASE("stringTrim", "[Util]")
+{
+  std::string whitespaceWord = " \n\tword\t\n ";
+  REQUIRE(Util::stringTrim(whitespaceWord) == "word");
 }
