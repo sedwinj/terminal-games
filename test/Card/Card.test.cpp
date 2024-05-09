@@ -17,7 +17,15 @@ TEST_CASE("Constructors", "[Card::Card]")
   CHECK((card5->getValue() == 12 && card5->getSuit() == Card::Suit::HEARTS));
 }
 
-TEST_CASE("Equality", "[Card]::==")
+TEST_CASE("Shuffled deck", "[Card::buildShuffledDeck]")
+{
+  std::mt19937 rng(std::random_device{}());
+
+  CHECK(Card::buildDeck() != Card::buildShuffledDeck(rng));
+  CHECK(Card::buildShuffledDeck(rng) != Card::buildShuffledDeck(rng));
+}
+
+TEST_CASE("Equality", "[Card::operator==]")
 {
   Card *card1 = new Card(12, Card::Suit::HEARTS);
   Card *card2 = new Card(12, Card::Suit::HEARTS);

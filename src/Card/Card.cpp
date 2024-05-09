@@ -68,6 +68,29 @@ Card::Card(std::string value, std::string suit) : value(stringToValue(value)),
 
 Card::Card(const Card &other) : value(other.value), suit(other.suit) {}
 
+std::vector<Card *> Card::buildDeck()
+{
+  std::vector<Card *> deck;
+  for (Suit suit : {Suit::CLUBS, Suit::DIAMONDS, Suit::HEARTS, Suit::SPADES})
+  {
+    for (int val = 1; val <= MAXVALUE; val++)
+    {
+      deck.push_back(new Card(val, suit));
+    }
+  }
+
+  return deck;
+}
+
+std::vector<Card *> Card::buildShuffledDeck(std::mt19937 rng)
+{
+  // TODO: test
+  auto deck = buildDeck();
+  std::shuffle(std::begin(deck), std::end(deck), rng);
+
+  return deck;
+}
+
 std::map<std::string, int> Card::buildStringToValueLookup()
 {
   std::map<std::string, int> map = {
@@ -96,7 +119,7 @@ std::map<std::string, int> Card::buildStringToValueLookup()
       {"king", 13},
   };
 
-  for (int i = 1; i <= 13; i++)
+  for (int i = 1; i <= MAXVALUE; i++)
   {
     map[std::to_string(i)] = i;
   }

@@ -1,6 +1,8 @@
 #pragma once
 
+#include <algorithm>
 #include <map>
+#include <random>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -10,6 +12,7 @@
 class Card
 {
 public:
+  const static int MAXVALUE = 13;
   enum Suit
   {
     CLUBS,
@@ -26,12 +29,16 @@ public:
 
   static std::vector<Card *> newDeck();
 
-  /*  Parses a string and converts it to a card. Accepted formats are of the
-   *  form:
-   *  - <charvalue><charnumber> (e.g.: "QH", "12H")
-   *  - <charvalue> <charnumber> (e.g.: "Q H", "12 H")
-   *  - <value> of <number> (e.g.: "queen of hearts", "12 of hearts",
+  /*  Parses a string and returns the card it represents. Case-insensitive.
+   *  Accepted input formats are:
+   *  - symbolic form (e.g.: "QH", "12H")
+   *  - symbolic form with a space (e.g.: "Q H", "12 H")
+   *  - word form (e.g.: "queen of hearts", "12 of hearts",
    *    "twelve of hearts")
+   *  - several hybridizations of the above forms
+   *
+   *  The symbols "A", "X" (10), "J", "Q", and "K" can be used instead of a
+   *  value.
    */
   static Card *parse(std::string str);
 
@@ -43,6 +50,9 @@ public:
 
   // Copy constructor
   Card(const Card &other);
+
+  static std::vector<Card *> buildDeck();
+  static std::vector<Card *> buildShuffledDeck(std::mt19937 rng);
 
   Suit getSuit() const;
   int getValue() const;
