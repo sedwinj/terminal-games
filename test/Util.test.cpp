@@ -8,24 +8,24 @@ TEST_CASE("contains", "[Util]")
 {
   char _letters[] = "abcde";
   auto letters = std::vector<char>(_letters, _letters + 5);
-  REQUIRE(Util::contains<char>(letters, 'c'));
-  REQUIRE(!Util::contains<char>(letters, 'f'));
+  CHECK(Util::contains<char>(letters, 'c'));
+  CHECK(!Util::contains<char>(letters, 'f'));
 
   std::string _words[] = {"alpha", "beta", "gamma", "delta", "epsilon"};
   auto words = std::vector<std::string>(_words, _words + 5);
-  REQUIRE(Util::contains<std::string>(words, "gamma"));
-  REQUIRE(!Util::contains<std::string>(words, "zeta"));
+  CHECK(Util::contains<std::string>(words, "gamma"));
+  CHECK(!Util::contains<std::string>(words, "zeta"));
 
   int _numbers[] = {1, 2, 3, 4, 5};
   auto numbers = std::vector<int>(_numbers, _numbers + 5);
-  REQUIRE(Util::contains<int>(numbers, 3));
-  REQUIRE(!Util::contains<int>(numbers, 6));
+  CHECK(Util::contains<int>(numbers, 3));
+  CHECK(!Util::contains<int>(numbers, 6));
 }
 
 TEST_CASE("stringLower", "[Util]")
 {
   std::string word = "WoRd";
-  REQUIRE(Util::stringLower(word) == "word");
+  CHECK(Util::stringLower(word) == "word");
 }
 
 TEST_CASE("stringSplit", "[Util]")
@@ -38,7 +38,7 @@ TEST_CASE("stringSplit", "[Util]")
   expected1.push_back("Delta");
   expected1.push_back("Epsilon");
   auto actual1 = Util::stringSplit(list);
-  REQUIRE(expected1 == actual1);
+  CHECK(expected1 == actual1);
 
   std::string phrase = "Lorem ipsum dolor sit amet";
   std::vector<std::string> expected2;
@@ -48,7 +48,7 @@ TEST_CASE("stringSplit", "[Util]")
   expected2.push_back("sit");
   expected2.push_back("amet");
   auto actual2 = Util::stringSplit(phrase, " ");
-  REQUIRE(expected2 == actual2);
+  CHECK(expected2 == actual2);
 
   std::string numbers = "one, two, three, four, five";
   std::vector<std::string> expected3;
@@ -58,7 +58,7 @@ TEST_CASE("stringSplit", "[Util]")
   expected3.push_back("four");
   expected3.push_back("five");
   auto actual3 = Util::stringSplit(numbers, ", ");
-  REQUIRE(expected3 == actual3);
+  CHECK(expected3 == actual3);
 
   std::string empties = ",hello,,world,";
   std::vector<std::string> expected4;
@@ -68,14 +68,14 @@ TEST_CASE("stringSplit", "[Util]")
   expected4.push_back("world");
   expected4.push_back("");
   auto actual4 = Util::stringSplit(empties);
-  REQUIRE(expected4 == actual4);
+  CHECK(expected4 == actual4);
 }
 
 TEST_CASE("stringTrim", "[Util]")
 {
   std::string whitespaceWord = " \n\tword\t\n ";
-  REQUIRE(Util::stringTrim(whitespaceWord) == "word");
+  CHECK(Util::stringTrim(whitespaceWord) == "word");
 
   std::string phrase = "middle space";
-  REQUIRE(Util::stringTrim(phrase) == "middle space");
+  CHECK(Util::stringTrim(phrase) == "middle space");
 }
