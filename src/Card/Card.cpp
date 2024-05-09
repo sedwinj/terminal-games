@@ -132,7 +132,6 @@ bool Card::operator!=(const Card &other) const
 
 Card *Card::parse(std::string str)
 {
-  // TODO: implement
   str = Util::stringLower(str);
 
   std::string value = "";

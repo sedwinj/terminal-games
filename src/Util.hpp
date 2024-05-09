@@ -16,7 +16,6 @@ namespace Util
   template <typename T>
   inline bool contains(const std::vector<T> &array, const T &value)
   {
-    // TODO: test
     for (size_t idx = 0; idx < array.size(); idx++)
     {
       if (value == array[idx])
@@ -67,7 +66,6 @@ namespace Util
   // Returns a copy of the input without leading and trailing whitespace characters.
   inline std::string stringTrim(const std::string &str)
   {
-    // TODO: test
     const char _whitespace[] = {' ', '\n', '\t'};
     const auto WHITESPACE = std::vector<char>(_whitespace, _whitespace + 3);
 
