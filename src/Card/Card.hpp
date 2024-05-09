@@ -52,23 +52,22 @@ public:
   std::string toSymbol();
 
 private:
-  enum Type
-  {
-    CHAR = 0,
-    STR = 1,
-    SYMBOL = 2
-  };
-
   Suit suit;
   int value;
 
-  static const std::map<std::string, Suit> suitFromString;
-  static const std::map<Suit, std::string> suitToString;
-  static const std::map<std::string, int> valueFromString;
-  static const std::map<int, std::string> valueToString;
+  static const std::map<std::string, Suit> stringToSuitLookup;
+  static const std::map<Suit, std::string> suitToStringLookup;
+  static const std::map<Suit, std::string> suitToSymbolLookup;
 
-  static std::map<std::string, Suit> buildSuitFromString();
-  static std::map<std::string, int> buildValueFromString();
-  static std::map<Suit, std::string> buildSuitToString();
-  static std::map<int, std::string> buildValueToString();
+  static const std::map<std::string, int> stringToValueLookup;
+  static const std::map<int, std::string> valueToStringLookup;
+  static const std::map<int, std::string> valueToSymbolLookup;
+
+  static std::map<std::string, int> buildStringToValueLookup();
+  static Suit stringToSuit(const std::string &str);
+  static int stringToValue(const std::string &str);
+  static std::string suitToString(Suit suit);
+  static std::string suitToSymbol(Suit suit);
+  static std::string valueToString(int val);
+  static std::string valueToSymbol(int val);
 };

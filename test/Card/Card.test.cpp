@@ -42,13 +42,15 @@ TEST_CASE("Parsing", "[Card::parse]")
 
 TEST_CASE("Parsing symbol notation", "[Card::parse]")
 {
-  Card::parse("12H");
-  Card::parse("AH");
-  Card::parse("XC");
-  Card::parse("jd");
-  Card::parse("qs");
-  Card::parse("ks");
-  Card::parse("14k");
+  CHECK_NOTHROW(Card::parse("12H"));
+  CHECK_NOTHROW(Card::parse("AH"));
+  CHECK_NOTHROW(Card::parse("XC"));
+  CHECK_NOTHROW(Card::parse("jd"));
+  CHECK_NOTHROW(Card::parse("qs"));
+  CHECK_NOTHROW(Card::parse("ks"));
+
+  CHECK_THROWS_AS(Card::parse("14h"), std::invalid_argument);
+  CHECK_THROWS_AS(Card::parse("hq"), std::invalid_argument);
 }
 
 TEST_CASE("toSymbol", "[Card::toSymbol]")

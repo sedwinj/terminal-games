@@ -1,106 +1,105 @@
 #include "Card.hpp"
 
-const std::map<std::string, Card::Suit> Card::suitFromString = buildSuitFromString();
-const std::map<Card::Suit, std::string> Card::suitToString = buildSuitToString();
-const std::map<std::string, int> Card::valueFromString = buildValueFromString();
-const std::map<int, std::string> Card::valueToString = buildValueToString();
+const std::map<std::string, Card::Suit> Card::stringToSuitLookup = {
+    {"c", CLUBS},
+    {"club", CLUBS},
+    {"clubs", CLUBS},
+    {"d", DIAMONDS},
+    {"diamond", DIAMONDS},
+    {"diamonds", DIAMONDS},
+    {"h", HEARTS},
+    {"heart", HEARTS},
+    {"hearts", HEARTS},
+    {"s", SPADES},
+    {"spade", SPADES},
+    {"spades", SPADES},
+};
+
+const std::map<std::string, int> Card::stringToValueLookup = buildStringToValueLookup();
+
+const std::map<Card::Suit, std::string> Card::suitToStringLookup = {
+    {Suit::CLUBS, "Clubs"},
+    {Suit::DIAMONDS, "Diamonds"},
+    {Suit::HEARTS, "Hearts"},
+    {Suit::SPADES, "Spades"},
+};
+
+const std::map<Card::Suit, std::string> Card::suitToSymbolLookup = {
+    {Card::Suit::CLUBS, "C"},
+    {Card::Suit::DIAMONDS, "D"},
+    {Card::Suit::HEARTS, "H"},
+    {Card::Suit::SPADES, "S"},
+};
+
+const std::map<int, std::string> Card::valueToStringLookup = {
+    {1, "Ace"},
+    {2, "Two"},
+    {3, "Three"},
+    {4, "Four"},
+    {5, "Five"},
+    {6, "Six"},
+    {7, "Seven"},
+    {8, "Eight"},
+    {9, "Nine"},
+    {10, "Ten"},
+    {11, "Jack"},
+    {12, "Queen"},
+    {13, "King"},
+};
+
+const std::map<int, std::string> Card::valueToSymbolLookup = {
+    {1, "A"},
+    {10, "X"},
+    {11, "J"},
+    {12, "Q"},
+    {13, "K"},
+};
 
 Card::Card(int value, Suit suit) : value(value), suit(suit) {}
 
 Card::Card(int value, std::string suit) : value(value),
-                                          suit(suitFromString.at(suit)) {}
+                                          suit(stringToSuit(suit)) {}
 
-Card::Card(std::string value, Suit suit) : value(valueFromString.at(value)),
+Card::Card(std::string value, Suit suit) : value(stringToValue(value)),
                                            suit(suit) {}
 
-Card::Card(std::string value, std::string suit) : value(valueFromString.at(value)),
-                                                  suit(suitFromString.at(suit)) {}
+Card::Card(std::string value, std::string suit) : value(stringToValue(value)),
+                                                  suit(stringToSuit(suit)) {}
 
 Card::Card(const Card &other) : value(other.value), suit(other.suit) {}
 
-std::map<std::string, Card::Suit> Card::buildSuitFromString()
+std::map<std::string, int> Card::buildStringToValueLookup()
 {
-  auto map = std::map<std::string, Card::Suit>();
+  std::map<std::string, int> map = {
+      {"one", 1},
+      {"two", 2},
+      {"three", 3},
+      {"four", 4},
+      {"five", 5},
+      {"six", 6},
+      {"seven", 7},
+      {"eight", 8},
+      {"nine", 9},
+      {"ten", 10},
+      {"eleven", 11},
+      {"twelve", 12},
+      {"thirteen", 13},
 
-  map["c"] = Card::Suit::CLUBS;
-  map["club"] = Card::Suit::CLUBS;
-  map["clubs"] = Card::Suit::CLUBS;
-  map["d"] = Card::Suit::DIAMONDS;
-  map["diamond"] = Card::Suit::DIAMONDS;
-  map["diamonds"] = Card::Suit::DIAMONDS;
-  map["h"] = Card::Suit::HEARTS;
-  map["heart"] = Card::Suit::HEARTS;
-  map["hearts"] = Card::Suit::HEARTS;
-  map["s"] = Card::Suit::SPADES;
-  map["spade"] = Card::Suit::SPADES;
-  map["spades"] = Card::Suit::SPADES;
+      {"a", 1},
+      {"ace", 1},
+      {"x", 10},
+      {"j", 11},
+      {"jack", 11},
+      {"q", 12},
+      {"queen", 12},
+      {"k", 13},
+      {"king", 13},
+  };
 
-  return map;
-}
-
-std::map<Card::Suit, std::string> Card::buildSuitToString()
-{
-  std::map<Suit, std::string> map;
-  map[Suit::CLUBS] = "Clubs";
-  map[Suit::DIAMONDS] = "Diamonds";
-  map[Suit::HEARTS] = "Hearts";
-  map[Suit::SPADES] = "Spades";
-
-  return map;
-}
-
-std::map<std::string, int> Card::buildValueFromString()
-{
-  auto map = std::map<std::string, int>();
-
-  for (int value = 1; value <= 13; value++)
+  for (int i = 1; i <= 13; i++)
   {
-    map[std::to_string(value)] = value;
+    map[std::to_string(i)] = i;
   }
-
-  map["one"] = 1;
-  map["two"] = 2;
-  map["three"] = 3;
-  map["four"] = 4;
-  map["five"] = 5;
-  map["six"] = 6;
-  map["seven"] = 7;
-  map["eight"] = 8;
-  map["nine"] = 9;
-  map["ten"] = 10;
-  map["eleven"] = 11;
-  map["twelve"] = 12;
-  map["thirteen"] = 13;
-
-  map["a"] = 1;
-  map["ace"] = 1;
-  map["x"] = 10;
-  map["j"] = 11;
-  map["jack"] = 11;
-  map["q"] = 12;
-  map["queen"] = 12;
-  map["k"] = 13;
-  map["king"] = 13;
-
-  return map;
-}
-
-std::map<int, std::string> Card::buildValueToString()
-{
-  std::map<int, std::string> map;
-  map[1] = "Ace";
-  map[2] = "Two";
-  map[3] = "Three";
-  map[4] = "Four";
-  map[5] = "Five";
-  map[6] = "Six";
-  map[7] = "Seven";
-  map[8] = "Eight";
-  map[9] = "Nine";
-  map[10] = "Ten";
-  map[11] = "Jack";
-  map[12] = "Queen";
-  map[13] = "King";
 
   return map;
 }
@@ -113,11 +112,6 @@ Card::Suit Card::getSuit() const
 int Card::getValue() const
 {
   return value;
-}
-
-std::vector<Card *> Card::newDeck()
-{
-  // TODO: implement
 }
 
 bool Card::operator==(const Card &other) const
@@ -153,15 +147,60 @@ Card *Card::parse(std::string str)
     suit = split[1];
   }
 
-  return new Card(valueFromString.at(value), suitFromString.at(suit));
+  return new Card(stringToValue(value), stringToSuit(suit));
+}
+
+Card::Suit Card::stringToSuit(const std::string &str)
+{
+  try
+  {
+    return stringToSuitLookup.at(str);
+  }
+  catch (const std::out_of_range &e)
+  {
+    throw std::invalid_argument("recieved invalid suit representation");
+  }
+}
+
+int Card::stringToValue(const std::string &str)
+{
+  try
+  {
+    return stringToValueLookup.at(str);
+  }
+  catch (const std::out_of_range &e)
+  {
+    throw std::invalid_argument("received invalid value representation");
+  }
+}
+
+std::string Card::suitToString(Suit suit)
+{
+  return suitToStringLookup.at(suit);
+}
+
+std::string Card::suitToSymbol(Suit suit)
+{
+  return suitToSymbolLookup.at(suit);
+}
+
+std::string Card::valueToString(int val)
+{
+  return valueToStringLookup.at(val);
+}
+
+std::string Card::valueToSymbol(int val)
+{
+  return valueToSymbolLookup.at(val);
 }
 
 std::string Card::toString()
 {
-  return valueToString.at(value) + " of " + suitToString.at(suit);
+  return valueToStringLookup.at(value) + " of " + suitToStringLookup.at(suit);
 }
 
 std::string Card::toSymbol()
 {
-  // TODO: implement
+  // TODO: test
+  return valueToSymbol(value) + suitToSymbol(suit);
 }
