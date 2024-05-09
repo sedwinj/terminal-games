@@ -17,7 +17,7 @@ namespace Util
   inline bool contains(const std::vector<T> &array, const T &value)
   {
     // TODO: test
-    for (int idx = 0; idx < array.size(); idx++)
+    for (size_t idx = 0; idx < array.size(); idx++)
     {
       if (value == array[idx])
       {
@@ -31,7 +31,7 @@ namespace Util
   inline std::string stringLower(const std::string &in)
   {
     std::string out = in;
-    for (int idx = 0; idx < out.size(); idx++)
+    for (size_t idx = 0; idx < out.size(); idx++)
     {
       if ('A' <= out[idx] && out[idx] <= 'Z')
       {
@@ -51,8 +51,8 @@ namespace Util
   inline std::vector<std::string> stringSplit(const std::string &str, const std::string &delim)
   {
     std::vector<std::string> split;
-    int left = 0;
-    int right = str.find(delim, left);
+    size_t left = 0;
+    size_t right = str.find(delim, left);
     while (right != std::string::npos)
     {
       split.push_back(str.substr(left, right - left));
@@ -72,7 +72,7 @@ namespace Util
     const auto WHITESPACE = std::vector<char>(_whitespace, _whitespace + 3);
 
     int start = 0;
-    for (; start < str.size(); start++)
+    for (; (__SIZE_TYPE__)start < str.size(); start++)
     {
       if (!contains<char>(WHITESPACE, str[start]))
       {
