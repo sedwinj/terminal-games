@@ -1,24 +1,27 @@
 #pragma once
 
-#include <memory>
+#include <map>
+#include <stdexcept>
 #include <string>
 #include <vector>
+
+#include "src/Util.hpp"
 
 class Card
 {
 public:
   enum Suit
   {
-    HEARTS,
     CLUBS,
     DIAMONDS,
+    HEARTS,
     SPADES
   };
 
   enum Color
   {
-    RED,
-    BLACK
+    BLACK,
+    RED
   };
 
   static std::vector<Card *> newDeck();
@@ -59,8 +62,13 @@ private:
   Suit suit;
   int value;
 
-  static Suit parseSuit(std::string suit);
-  static int parseValue(std::string value);
-  static std::string suitToString(Suit suit);
-  static std::string valueToString(int value);
+  static const std::map<std::string, Suit> suitFromString;
+  static const std::map<Suit, std::string> suitToString;
+  static const std::map<std::string, int> valueFromString;
+  static const std::map<int, std::string> valueToString;
+
+  static std::map<std::string, Suit> buildSuitFromString();
+  static std::map<std::string, int> buildValueFromString();
+  static std::map<Suit, std::string> buildSuitToString();
+  static std::map<int, std::string> buildValueToString();
 };

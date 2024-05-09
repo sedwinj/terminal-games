@@ -1,5 +1,3 @@
-#include <memory>
-
 #include "lib/catch.hpp"
 
 #include "src/Card/Card.hpp"
