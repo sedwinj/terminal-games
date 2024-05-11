@@ -1,6 +1,6 @@
 #include "lib/catch.hpp"
 
-#include "src/Card/Card.hpp"
+#include "src/Card.hpp"
 
 TEST_CASE("Constructors", "[Card::Card]")
 {

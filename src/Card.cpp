@@ -153,7 +153,7 @@ Card *Card::parse(std::string str)
 
   std::string value = "";
   std::string suit = "";
-  if (2 <= str.size() <= 3 && str.find(" ") == std::string::npos)
+  if (2 <= str.size() && str.size() <= 3 && str.find(" ") == std::string::npos)
   {
     value = str.substr(0, str.size() - 1);
     suit = str.substr(str.size() - 1);

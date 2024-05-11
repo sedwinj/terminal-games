@@ -62,8 +62,8 @@ public:
   std::string toSymbol();
 
 private:
-  Suit suit;
   int value;
+  Suit suit;
 
   static const std::map<std::string, Suit> stringToSuitLookup;
   static const std::map<Suit, std::string> suitToStringLookup;
