@@ -137,6 +137,16 @@ int Card::getValue() const
   return value;
 }
 
+bool Card::isBlack() const
+{
+  return suit == Suit::CLUBS || suit == Suit::SPADES;
+}
+
+bool Card::isRed() const
+{
+  return !isBlack();
+}
+
 bool Card::operator==(const Card &other) const
 {
   return value == other.value && suit == other.suit;
@@ -224,6 +234,5 @@ std::string Card::toString()
 
 std::string Card::toSymbol()
 {
-  // TODO: test
   return valueToSymbol(value) + suitToSymbol(suit);
 }

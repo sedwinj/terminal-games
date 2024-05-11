@@ -21,12 +21,6 @@ public:
     SPADES
   };
 
-  enum Color
-  {
-    BLACK,
-    RED
-  };
-
   static std::vector<Card *> newDeck();
 
   /*  Parses a string and returns the card it represents. Case-insensitive.
@@ -56,6 +50,8 @@ public:
 
   Suit getSuit() const;
   int getValue() const;
+  bool isBlack() const;
+  bool isRed() const;
   bool operator==(const Card &other) const;
   bool operator!=(const Card &other) const;
   std::string toString();
