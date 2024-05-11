@@ -12,7 +12,7 @@
 class Card
 {
 public:
-  const static int MAXVALUE = 13;
+  static const int MAXVALUE = 13;
   enum Suit
   {
     CLUBS,
@@ -46,7 +46,7 @@ public:
   Card(const Card &other);
 
   static std::vector<Card *> buildDeck();
-  static std::vector<Card *> buildShuffledDeck(std::mt19937 rng);
+  static std::vector<Card *> buildShuffledDeck(int seed);
 
   Suit getSuit() const;
   int getValue() const;
