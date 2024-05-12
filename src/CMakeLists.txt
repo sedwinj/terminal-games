@@ -1,7 +1,7 @@
 add_library(src 
     MainComponent.cpp
     Card.cpp
-    Freecell.cpp
+    FreeCell.cpp
 )
 target_link_libraries(src PUBLIC compile_flags)
 
