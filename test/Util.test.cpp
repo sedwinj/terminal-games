@@ -74,8 +74,14 @@ TEST_CASE("stringSplit", "[Util]")
 TEST_CASE("stringTrim", "[Util]")
 {
   std::string whitespaceWord = " \n\tword\t\n ";
-  CHECK(Util::stringTrim(whitespaceWord) == "word");
-
   std::string phrase = "middle space";
+  std::string spaces = "          ";
+  std::string space = " ";
+  std::string empty = "";
+
+  CHECK(Util::stringTrim(whitespaceWord) == "word");
   CHECK(Util::stringTrim(phrase) == "middle space");
+  CHECK(Util::stringTrim(spaces) == "");
+  CHECK(Util::stringTrim(space) == "");
+  CHECK(Util::stringTrim(empty) == "");
 }
