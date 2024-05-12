@@ -6,7 +6,11 @@
 namespace Util
 {
   template <typename T>
-  bool contains(const std::vector<T> &array, const T &value);
+  inline bool contains(const std::vector<T> &array, const T &value);
+  template <class T>
+  inline void deleteAll(std::initializer_list<T *> objects);
+  template <class T>
+  inline void deleteAll(std::vector<T *> objects);
   inline std::string stringLower(const std::string &in);
   inline std::vector<std::string> stringSplit(const std::string &str);
   inline std::vector<std::string> stringSplit(const std::string &str, const std::string &delim);
@@ -24,6 +28,23 @@ namespace Util
       }
     }
     return false;
+  }
+
+  template <class T>
+  inline void deleteAll(std::initializer_list<T *> objects)
+  {
+    // TODO: test
+    deleteAll(std::vector<T *>(objects.begin(), objects.end()));
+  }
+
+  template <class T>
+  inline void deleteAll(std::vector<T *> objects)
+  {
+    // TODO: test
+    for (auto object : objects)
+    {
+      delete object;
+    }
   }
 
   // Returns a copy of the string with all letters converted to lowercase.
