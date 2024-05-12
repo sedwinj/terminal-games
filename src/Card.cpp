@@ -224,7 +224,14 @@ std::string Card::valueToString(int val)
 
 std::string Card::valueToSymbol(int val)
 {
-  return valueToSymbolLookup.at(val);
+  try
+  {
+    return valueToSymbolLookup.at(val);
+  }
+  catch (const std::out_of_range &e)
+  {
+    return std::to_string(val);
+  }
 }
 
 std::string Card::toString()
