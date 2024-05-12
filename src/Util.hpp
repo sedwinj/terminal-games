@@ -33,14 +33,12 @@ namespace Util
   template <class T>
   inline void deleteAll(std::initializer_list<T *> objects)
   {
-    // TODO: test
     deleteAll(std::vector<T *>(objects.begin(), objects.end()));
   }
 
   template <class T>
   inline void deleteAll(std::vector<T *> objects)
   {
-    // TODO: test
     for (auto object : objects)
     {
       delete object;

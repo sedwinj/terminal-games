@@ -86,9 +86,6 @@ TEST_CASE("Parsing symbol notation", "[Card::parse]")
 
 TEST_CASE("toSymbol", "[Card::toSymbol]")
 {
-  // TODO: implement
-
-  // Generate
   std::vector<std::string> values{"A", "X", "J", "Q", "K"};
   for (int i = 2; i < 10; i++)
     values.push_back(std::to_string(i));

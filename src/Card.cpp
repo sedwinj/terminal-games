@@ -84,7 +84,6 @@ std::vector<Card *> Card::buildDeck()
 
 std::vector<Card *> Card::buildShuffledDeck(int seed)
 {
-  // TODO: test
   auto deck = buildDeck();
   std::shuffle(std::begin(deck), std::end(deck), std::mt19937(seed));
 
