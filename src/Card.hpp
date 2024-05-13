@@ -21,7 +21,11 @@ public:
     SPADES
   };
 
-  static std::vector<Card *> newDeck();
+  // Constructors
+  Card(int value, Suit suit);
+  Card(int value, std::string suit);
+  Card(std::string value, Suit suit);
+  Card(std::string value, std::string suit);
 
   /*  Parses a string and returns the card it represents. Case-insensitive.
    *  Accepted input formats are:
@@ -34,13 +38,7 @@ public:
    *  The symbols "A", "X" (10), "J", "Q", and "K" can be used instead of a
    *  value.
    */
-  static Card *parse(std::string str);
-
-  // Constructors
-  Card(int value, Suit suit);
-  Card(int value, std::string suit);
-  Card(std::string value, Suit suit);
-  Card(std::string value, std::string suit);
+  Card(std::string str);
 
   // Copy constructor
   Card(const Card &other);
@@ -54,6 +52,10 @@ public:
   bool isRed() const;
   bool operator==(const Card &other) const;
   bool operator!=(const Card &other) const;
+
+  // See Card(std::string) for use
+  static Card *parse(std::string str);
+
   std::string toString();
   std::string toSymbol();
 

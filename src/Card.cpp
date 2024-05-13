@@ -66,6 +66,33 @@ Card::Card(std::string value, Suit suit) : value(stringToValue(value)),
 Card::Card(std::string value, std::string suit) : value(stringToValue(value)),
                                                   suit(stringToSuit(suit)) {}
 
+Card::Card(std::string str)
+{
+  str = Util::stringLower(str);
+
+  std::string value = "";
+  std::string suit = "";
+  if (2 <= str.size() && str.size() <= 3 && str.find(" ") == std::string::npos)
+  {
+    value = str.substr(0, str.size() - 1);
+    suit = str.substr(str.size() - 1);
+  }
+  else
+  {
+    // Find a valid value-suit split
+    auto split = Util::stringSplit(str, " of ");
+    if (split.size() == 1)
+    {
+      split = Util::stringSplit(str, " ");
+    }
+    value = split[0];
+    suit = split[1];
+  }
+
+  this->value = stringToValue(value);
+  this->suit = stringToSuit(suit);
+}
+
 Card::Card(const Card &other) : value(other.value), suit(other.suit) {}
 
 std::vector<Card *> Card::buildDeck()
@@ -158,28 +185,7 @@ bool Card::operator!=(const Card &other) const
 
 Card *Card::parse(std::string str)
 {
-  str = Util::stringLower(str);
-
-  std::string value = "";
-  std::string suit = "";
-  if (2 <= str.size() && str.size() <= 3 && str.find(" ") == std::string::npos)
-  {
-    value = str.substr(0, str.size() - 1);
-    suit = str.substr(str.size() - 1);
-  }
-  else
-  {
-    // Find a valid value-suit split
-    auto split = Util::stringSplit(str, " of ");
-    if (split.size() == 1)
-    {
-      split = Util::stringSplit(str, " ");
-    }
-    value = split[0];
-    suit = split[1];
-  }
-
-  return new Card(stringToValue(value), stringToSuit(suit));
+  return new Card(str);
 }
 
 Card::Suit Card::stringToSuit(const std::string &str)
