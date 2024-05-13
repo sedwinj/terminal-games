@@ -19,7 +19,7 @@ public:
   public:
     std::array<std::vector<Card *>, FOUNDATIONS> foundations;
     std::array<Card *, FREE_CELLS> freeCells;
-    std::vector<std::vector<Card *>> columns;
+    std::array<std::vector<Card *>, COLUMNS> columns;
 
     Board(std::vector<Card *> deck);
 
@@ -29,6 +29,11 @@ public:
     std::string toString();
 
   private:
+    static const std::string CARD_SLOT;
+    static const std::string NO_CARD;
+    static const std::string SEPARATOR;
+    static const std::string SPACER;
+
     std::string rowToString(int row);
   };
 
@@ -38,7 +43,7 @@ public:
   // Initializes a new FreeCell object from a specific seed.
   FreeCell(int seed);
 
-  // Initializes a new FreeCell object from an existing board struct;
+  // Initializes a new FreeCell object from an existing FreeCell::Board;
   FreeCell(const Board &board);
 
   /*
