@@ -64,6 +64,8 @@ public:
 
   std::string boardToString();
 
+  static Board createBoard(std::vector<Card *> deck);
+
   /*
    *  Attempts to move the specified card (and the tablueau below it) to the
    *  specified position, according to FreeCell game rules. Moves the card(s)
@@ -77,8 +79,6 @@ public:
 private:
   Board board;
   int seed;
-
-  void generateBoard();
 
   // Returns true if the input is a valid tableau.
   bool isValidTableau(std::vector<Card *> tableau);
