@@ -25,8 +25,8 @@ TEST_CASE("Shuffled deck", "[Card::buildShuffledDeck]")
   std::mt19937 rng(std::random_device{}());
 
   std::vector<Card *> ordered = Card::buildDeck();
-  std::vector<Card *> shuffle1 = Card::buildShuffledDeck(rng());
-  std::vector<Card *> shuffle2 = Card::buildShuffledDeck(rng());
+  std::vector<Card *> shuffle1 = Card::buildShuffledDeck(rng);
+  std::vector<Card *> shuffle2 = Card::buildShuffledDeck(rng);
 
   CHECK(ordered != shuffle1);
   CHECK(shuffle1 != shuffle2);

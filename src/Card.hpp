@@ -21,8 +21,6 @@ public:
     SPADES
   };
 
-  static std::vector<Card *> newDeck();
-
   /*  Parses a string and returns the card it represents. Case-insensitive.
    *  Accepted input formats are:
    *  - symbolic form (e.g.: "QH", "12H")
@@ -46,7 +44,7 @@ public:
   Card(const Card &other);
 
   static std::vector<Card *> buildDeck();
-  static std::vector<Card *> buildShuffledDeck(int seed);
+  static std::vector<Card *> buildShuffledDeck(std::mt19937 rng);
 
   Suit getSuit() const;
   int getValue() const;
