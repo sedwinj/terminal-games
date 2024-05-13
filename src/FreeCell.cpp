@@ -1,5 +1,36 @@
 #include "FreeCell.hpp"
 
+FreeCell::Board::Board() {}
+
+FreeCell::Board::Board(const Board &other)
+{
+  // Foundations
+  for (int idx; idx < FOUNDATIONS; idx++)
+  {
+    foundations[idx] = std::vector<Card *>();
+    for (auto card : foundations[idx])
+    {
+      foundations[idx].push_back(new Card(*card));
+    }
+  }
+
+  // FreeCells
+  for (int idx = 0; idx < FREE_CELLS; idx++)
+  {
+    freeCells[idx] = new Card(*other.freeCells[idx]);
+  }
+
+  // Columns
+  for (auto column : columns)
+  {
+    columns.push_back(std::vector<Card *>());
+    for (auto card : column)
+    {
+      columns.back().push_back(new Card(*card));
+    }
+  }
+}
+
 FreeCell::FreeCell() : FreeCell(std::random_device{}()) {}
 
 FreeCell::FreeCell(int seed)

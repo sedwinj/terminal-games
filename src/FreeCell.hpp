@@ -14,44 +14,18 @@ public:
   static const int FOUNDATIONS = 4;
   static const int FREE_CELLS = 4;
 
-  typedef struct Board
+  class Board
   {
+  public:
     std::array<std::vector<Card *>, FOUNDATIONS> foundations;
     std::array<Card *, FREE_CELLS> freeCells;
     std::vector<std::vector<Card *>> columns;
 
-    inline Board() {}
+    Board();
 
-    // Performs a deep copy of rhs and assigns it to lhs.
-    inline Board(const Board &other)
-    {
-      // Foundations
-      for (int idx; idx < FOUNDATIONS; idx++)
-      {
-        foundations[idx] = std::vector<Card *>();
-        for (auto card : foundations[idx])
-        {
-          foundations[idx].push_back(new Card(*card));
-        }
-      }
-
-      // FreeCells
-      for (int idx = 0; idx < FREE_CELLS; idx++)
-      {
-        freeCells[idx] = new Card(*other.freeCells[idx]);
-      }
-
-      // Columns
-      for (auto column : columns)
-      {
-        columns.push_back(std::vector<Card *>());
-        for (auto card : column)
-        {
-          columns.back().push_back(new Card(*card));
-        }
-      }
-    }
-  } Board;
+    // Creates a deep copy of the input.
+    Board(const Board &other);
+  };
 
   // Initializes a new FreeCell object with a random seed.
   FreeCell();
