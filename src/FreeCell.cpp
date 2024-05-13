@@ -1,6 +1,14 @@
 #include "FreeCell.hpp"
 
-FreeCell::Board::Board() {}
+FreeCell::Board::Board(std::vector<Card *> deck)
+{
+  // TODO: test
+  std::vector<Card *>::iterator it = deck.begin();
+  for (int col = 0; it != deck.end(); col = ++col % COLUMNS)
+  {
+    columns[col].push_back(*it++);
+  }
+}
 
 FreeCell::Board::Board(const Board &other)
 {
@@ -31,26 +39,12 @@ FreeCell::Board::Board(const Board &other)
   }
 }
 
-FreeCell::FreeCell() : FreeCell(std::random_device{}()) {}
-
-FreeCell::FreeCell(int seed)
+std::string FreeCell::Board::rowToString(int row)
 {
-  // TODO: test
-  setSeed(seed);
-  board = createBoard(Card::buildShuffledDeck(seed));
+  // TODO: implement
 }
 
-FreeCell::FreeCell(const Board &board)
-{
-  this->board = Board(board);
-}
-
-std::string FreeCell::boardRowToString(int row)
-{
-  // TODO: implemenet
-}
-
-std::string FreeCell::boardToString()
+std::string FreeCell::Board::toString()
 {
   // TODO: implement
   const std::string SEPARATOR = " ";
@@ -59,7 +53,7 @@ std::string FreeCell::boardToString()
   std::string boardString = "";
 
   // Create foundation and freecell line
-  for (auto foundation : board.foundations)
+  for (auto foundation : foundations)
   {
     if (foundation.size() > 0)
     {
@@ -73,9 +67,9 @@ std::string FreeCell::boardToString()
   }
   for (int idx = 0; idx < FREE_CELLS; idx++)
   {
-    if (board.freeCells[idx] != nullptr)
+    if (freeCells[idx] != nullptr)
     {
-      boardString += board.freeCells[idx]->toSymbol();
+      boardString += freeCells[idx]->toSymbol();
     }
     else
     {
@@ -90,24 +84,19 @@ std::string FreeCell::boardToString()
 
   // TODO: continue 2024-05-12 16:47
   int rowNum = 0;
-  std::string nextRow = boardRowToString(rowNum++);
+  std::string nextRow = rowToString(rowNum++);
   while (Util::stringTrim(nextRow) != "")
   {
-    nextRow = boardRowToString(rowNum++);
+    nextRow = rowToString(rowNum++);
   }
 }
 
-FreeCell::Board FreeCell::createBoard(std::vector<Card *> deck)
-{
-  // TODO: test
-  Board board;
+FreeCell::FreeCell() : FreeCell(std::random_device{}()) {}
 
-  std::vector<Card *>::iterator it = deck.begin();
-  for (int col = 0; it != deck.end(); col = ++col % COLUMNS)
-  {
-    board.columns[col].push_back(*it++);
-  }
-}
+FreeCell::FreeCell(int seed) : seed(seed),
+                               board(Board(Card::buildShuffledDeck(seed))) {}
+
+FreeCell::FreeCell(const Board &board) : board(Board(board)) {}
 
 void FreeCell::setSeed(int seed)
 {

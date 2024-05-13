@@ -21,10 +21,15 @@ public:
     std::array<Card *, FREE_CELLS> freeCells;
     std::vector<std::vector<Card *>> columns;
 
-    Board();
+    Board(std::vector<Card *> deck);
 
     // Creates a deep copy of the input.
     Board(const Board &other);
+
+    std::string toString();
+
+  private:
+    std::string rowToString(int row);
   };
 
   // Initializes a new FreeCell object with a random seed.
@@ -35,10 +40,6 @@ public:
 
   // Initializes a new FreeCell object from an existing board struct;
   FreeCell(const Board &board);
-
-  std::string boardToString();
-
-  static Board createBoard(std::vector<Card *> deck);
 
   /*
    *  Attempts to move the specified card (and the tablueau below it) to the
@@ -56,6 +57,4 @@ private:
 
   // Returns true if the input is a valid tableau.
   bool isValidTableau(std::vector<Card *> tableau);
-
-  std::string boardRowToString(int row);
 };
