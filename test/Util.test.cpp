@@ -2,6 +2,7 @@
 
 #include "lib/catch.hpp"
 
+#include "src/Card.hpp"
 #include "src/Util.hpp"
 
 TEST_CASE("contains", "[Util]")
@@ -22,13 +23,24 @@ TEST_CASE("contains", "[Util]")
   CHECK(!Util::contains<int>(numbers, 6));
 }
 
-TEST_CASE("stringLower", "[Util]")
+TEST_CASE("deletePtr updates ptr to nullptr", "[Util::deletePtr]")
+{
+  /*
+   *Testing for actual deletion is not an easy task, so it fall outside of this
+   * scope.
+   */
+  Card *ptr = new Card("QH");
+  Util::deletePtr(ptr);
+  CHECK(ptr == nullptr);
+}
+
+TEST_CASE("convert string to lowercase", "[Util::stringLower]")
 {
   std::string word = "WoRd";
   CHECK(Util::stringLower(word) == "word");
 }
 
-TEST_CASE("stringSplit", "[Util]")
+TEST_CASE("splits strings", "[Util::stringSplit]")
 {
   std::string list = "Alpha,Beta,Gamma,Delta,Epsilon";
   std::vector<std::string> expected1;
@@ -71,7 +83,7 @@ TEST_CASE("stringSplit", "[Util]")
   CHECK(expected4 == actual4);
 }
 
-TEST_CASE("stringTrim", "[Util]")
+TEST_CASE("trims whitespace from strings", "[Util::stringTrim]")
 {
   std::string whitespaceWord = " \n\tword\t\n ";
   std::string phrase = "middle space";
