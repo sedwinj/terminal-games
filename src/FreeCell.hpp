@@ -53,8 +53,11 @@ public:
     }
   } Board;
 
-  // Initializes a new FreeCell object from a seeded random number generator.
-  FreeCell(std::mt19937 rng);
+  // Initializes a new FreeCell object with a random seed.
+  FreeCell();
+
+  // Initializes a new FreeCell object from a specific seed.
+  FreeCell(int seed);
 
   // Initializes a new FreeCell object from an existing board struct;
   FreeCell(const Board &board);
@@ -69,11 +72,11 @@ public:
    */
   bool move(std::string card, std::string position);
 
-  void setGenerator(std::mt19937 rng);
+  void setSeed(int seed);
 
 private:
   Board board;
-  std::mt19937 rng;
+  int seed;
 
   void generateBoard();
 

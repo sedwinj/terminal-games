@@ -82,10 +82,10 @@ std::vector<Card *> Card::buildDeck()
   return deck;
 }
 
-std::vector<Card *> Card::buildShuffledDeck(std::mt19937 rng)
+std::vector<Card *> Card::buildShuffledDeck(int seed)
 {
   auto deck = buildDeck();
-  std::shuffle(std::begin(deck), std::end(deck), rng);
+  std::shuffle(std::begin(deck), std::end(deck), std::mt19937(seed));
 
   return deck;
 }

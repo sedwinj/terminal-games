@@ -1,9 +1,11 @@
 #include "FreeCell.hpp"
 
-FreeCell::FreeCell(std::mt19937 rng)
+FreeCell::FreeCell() : FreeCell(std::random_device{}()) {}
+
+FreeCell::FreeCell(int seed)
 {
   // TODO: test
-  setGenerator(rng);
+  setSeed(seed);
   generateBoard();
 }
 
@@ -66,12 +68,12 @@ std::string FreeCell::boardToString()
 
 void FreeCell::generateBoard()
 {
-  auto deck = Card::buildShuffledDeck(rng);
+  auto deck = Card::buildShuffledDeck(seed);
 
   int column = 0;
 }
 
-void FreeCell::setGenerator(std::mt19937 rng)
+void FreeCell::setSeed(int seed)
 {
-  this->rng = rng;
+  this->seed = seed;
 }
