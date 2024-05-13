@@ -46,6 +46,18 @@ FreeCell::Board::Board(const Board &other)
   }
 }
 
+FreeCell::Board::~Board()
+{
+  for (auto foundation : foundations)
+    Util::deleteAll(foundation);
+
+  for (Card *card : freeCells)
+    delete card;
+
+  for (auto column : columns)
+    Util::deleteAll(column);
+}
+
 std::string FreeCell::Board::rowToString(int row)
 {
   std::string rowStr = SPACER;

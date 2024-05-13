@@ -26,6 +26,8 @@ public:
     // Creates a deep copy of the input.
     Board(const Board &other);
 
+    ~Board();
+
     std::string toString();
 
   private:
