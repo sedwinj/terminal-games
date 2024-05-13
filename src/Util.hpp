@@ -7,14 +7,12 @@ namespace Util
 {
   template <typename T>
   inline bool contains(const std::vector<T> &array, const T &value);
-  template <typename T>
-  inline bool contains(const std::vector<T> &array, const T &value);
   template <class T>
-  inline void deleter(T *object);
+  inline void deletePtr(T *&object);
   template <class T>
   inline void deleteAll(std::initializer_list<T *> objects);
   template <class T>
-  inline void deleteAll(std::vector<T *> objects);
+  inline void deleteAll(std::vector<T *> &objects);
   inline std::string stringLower(const std::string &in);
 
   inline std::vector<std::string> stringSplit(const std::string &str);
@@ -28,30 +26,36 @@ namespace Util
     return std::find(vec.begin(), vec.end(), value) != vec.end();
   }
 
-  // Calls delete on whatever is pointed to, unless it is a nullptr.
+  /**
+   * Calls the destructor on whatever object is pointed to, unless it's a
+   * nullptr. Replaces the pointer with a nullptr.
+   */
   template <class T>
-  inline void deleter(T *object)
+  inline void deletePtr(T *&object)
   {
     if (object != nullptr)
     {
       delete object;
+      object = nullptr;
     }
   }
 
-  // Calls delete on all pointers passed (except nullptrs). Recurses on lists.
+  // Calls delete on all pointers passed (except nullptrs).
   template <class T>
   inline void deleteAll(std::initializer_list<T *> objects)
   {
-    deleteAll(std::vector<T *>(objects.begin(), objects.end()));
+    std::vector<T *> vec(objects.begin(), objects.end());
+    deleteAll(vec);
   }
 
-  // Calls delete on all pointers passed (except nullptrs). Recurses on lists.
+  // Calls delete on all pointers passed (except nullptrs).
   template <class T>
-  inline void deleteAll(std::vector<T *> objects)
+  inline void deleteAll(std::vector<T *> &objects)
   {
-    for (auto object : objects)
+    for (int idx = 0; idx < objects.size(); idx++)
     {
-      deleter(object);
+      deletePtr(objects[idx]);
+      objects[idx] = nullptr;
     }
   }
 
