@@ -56,8 +56,6 @@ public:
    */
   bool move(std::string card, std::string position);
 
-  void setSeed(int seed);
-
 private:
   Board board;
   int seed;

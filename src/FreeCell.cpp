@@ -135,8 +135,3 @@ FreeCell::FreeCell(int seed) : board(Board(Card::buildShuffledDeck(seed))),
                                seed(seed) {}
 
 FreeCell::FreeCell(const Board &board) : board(Board(board)) {}
-
-void FreeCell::setSeed(int seed)
-{
-  this->seed = seed;
-}
