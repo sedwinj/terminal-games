@@ -1,7 +1,10 @@
 #include "MainComponent.hpp"
 
-int MainComponent::main(int argc, char **argv)
+MainComponent::MainComponent() : freeCell(FreeCell(FreeCell::Board(std::vector<Card *>()))) {}
+
+int MainComponent::run()
 {
-  std::cout << "Hello World!" << std::endl;
+  std::cout << freeCell.boardToString() << std::endl;
+
   return EXIT_SUCCESS;
 }

@@ -5,5 +5,5 @@ add_library(src
 )
 target_link_libraries(src PUBLIC compile_flags)
 
-add_executable(terminal-games Runner.cpp)
+add_executable(terminal-games main.cpp)
 target_link_libraries(terminal-games PUBLIC src)

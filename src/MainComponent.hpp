@@ -2,8 +2,14 @@
 
 #include <iostream>
 
+#include "FreeCell.hpp"
+
 class MainComponent
 {
 public:
-  static int main(int argc, char *argv[]);
+  MainComponent();
+  int run();
+
+private:
+  FreeCell freeCell;
 };

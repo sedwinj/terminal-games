@@ -2,5 +2,5 @@
 
 int main(int argc, char **argv)
 {
-  return MainComponent::main(argc, argv);
+  return MainComponent().run();
 }
