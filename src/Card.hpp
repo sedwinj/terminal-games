@@ -13,12 +13,14 @@ class Card
 {
 public:
   static const int MAXVALUE = 13;
+
+  // Reverse alphabetical (aka Bridge) order
   enum Suit
   {
-    CLUBS,
-    DIAMONDS,
-    HEARTS,
-    SPADES
+    SPADES = 0,
+    HEARTS = 1,
+    DIAMONDS = 2,
+    CLUBS = 3
   };
 
   // Constructors

@@ -98,7 +98,7 @@ Card::Card(const Card &other) : value(other.value), suit(other.suit) {}
 std::vector<Card *> Card::buildDeck()
 {
   std::vector<Card *> deck;
-  for (Suit suit : {Suit::CLUBS, Suit::DIAMONDS, Suit::HEARTS, Suit::SPADES})
+  for (Suit suit : {Suit::SPADES, Suit::HEARTS, Suit::DIAMONDS, Suit::CLUBS})
   {
     for (int val = 1; val <= MAXVALUE; val++)
     {
