@@ -39,6 +39,8 @@ public:
    *
    *  The symbols "A", "X" (10), "J", "Q", and "K" can be used instead of a
    *  value.
+   *
+   * Throws invalid_argument exception on failed parse.
    */
   Card(std::string str);
 
@@ -55,7 +57,10 @@ public:
   bool operator==(const Card &other) const;
   bool operator!=(const Card &other) const;
 
-  // See Card(std::string) for use
+  /*
+   * Returns new Card(std::string). Throws invalid_argument exception on failed
+   * parse.
+   */
   static Card *parse(std::string str);
 
   std::string toString();

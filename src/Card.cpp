@@ -196,7 +196,7 @@ Card::Suit Card::stringToSuit(const std::string &str)
   }
   catch (const std::out_of_range &e)
   {
-    throw std::invalid_argument("recieved invalid suit representation");
+    throw std::invalid_argument("Recieved invalid suit representation (\"" + str + "\")");
   }
 }
 
@@ -208,7 +208,7 @@ int Card::stringToValue(const std::string &str)
   }
   catch (const std::out_of_range &e)
   {
-    throw std::invalid_argument("received invalid value representation");
+    throw std::invalid_argument("Received invalid value representation (\"" + str + "\")");
   }
 }
 
