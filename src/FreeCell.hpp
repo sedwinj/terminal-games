@@ -17,9 +17,11 @@ public:
   class Board
   {
   public:
+    typedef std::array<std::vector<Card *>, COLUMNS> Columns;
+
     std::array<std::vector<Card *>, FOUNDATIONS> foundations;
     std::array<Card *, FREE_CELLS> freeCells;
-    std::array<std::vector<Card *>, COLUMNS> columns;
+    Columns columns;
 
     Board(std::vector<Card *> deck);
 
@@ -41,6 +43,9 @@ public:
     static const std::string NO_CARD;
     static const std::string SEPARATOR;
     static const std::string SPACER;
+
+    // Returns true if two Columns contain equal cards in the same positions.
+    static bool columnsEqual(const Columns &col1, const Columns &col2);
 
     std::string rowToString(size_t row) const;
   };

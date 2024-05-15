@@ -58,11 +58,30 @@ FreeCell::Board::~Board()
     Util::deleteAll(column);
 }
 
+bool FreeCell::Board::columnsEqual(const Columns &col1, const Columns &col2)
+{
+  for (size_t idx = 0; idx < col1.size(); idx++)
+  {
+    if (col1[idx].size() != col2[idx].size())
+    {
+      return false;
+    }
+    for (size_t jdx = 0; jdx < col1[idx].size(); jdx++)
+    {
+      if (*col1[idx][jdx] != *col2[idx][jdx])
+      {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
 bool FreeCell::Board::equal(const Board &other) const
 {
   return foundations == other.foundations &&
          freeCells == other.freeCells &&
-         columns == other.columns;
+         columnsEqual(columns, other.columns);
 }
 
 bool FreeCell::Board::operator==(const Board &other) const
