@@ -31,16 +31,17 @@ FreeCell::Board::Board(const Board &other)
   // FreeCells
   for (int idx = 0; idx < FREE_CELLS; idx++)
   {
-    freeCells[idx] = new Card(*other.freeCells[idx]);
+    Card *card = other.freeCells[idx];
+    freeCells[idx] = card != nullptr ? new Card(*card) : nullptr;
   }
 
   // Columns
   for (int col = 0; col < COLUMNS; col++)
   {
     columns[col] = std::vector<Card *>();
-    for (auto card : columns[col])
+    for (auto card : other.columns[col])
     {
-      columns.back().push_back(new Card(*card));
+      columns[col].push_back(new Card(*card));
     }
   }
 }
@@ -57,7 +58,24 @@ FreeCell::Board::~Board()
     Util::deleteAll(column);
 }
 
-std::string FreeCell::Board::rowToString(size_t row)
+bool FreeCell::Board::equal(const Board &other) const
+{
+  return foundations == other.foundations &&
+         freeCells == other.freeCells &&
+         columns == other.columns;
+}
+
+bool FreeCell::Board::operator==(const Board &other) const
+{
+  return this->equal(other);
+}
+
+bool FreeCell::Board::operator!=(const Board &other) const
+{
+  return !this->equal(other);
+}
+
+std::string FreeCell::Board::rowToString(size_t row) const
 {
   std::string rowStr = SPACER;
   for (size_t col = 0; col < columns.size(); col++)
@@ -68,7 +86,7 @@ std::string FreeCell::Board::rowToString(size_t row)
     }
     else
     {
-      rowStr += NO_CARD;
+      rowStr += row > 0 ? NO_CARD : CARD_SLOT;
     }
 
     if (col < columns.size() - 1)
@@ -81,7 +99,7 @@ std::string FreeCell::Board::rowToString(size_t row)
   return rowStr;
 }
 
-std::string FreeCell::Board::toString()
+std::string FreeCell::Board::toString() const
 {
   std::string boardString = "";
 
@@ -135,3 +153,8 @@ FreeCell::FreeCell(int seed) : board(Board(Card::buildShuffledDeck(seed))),
                                seed(seed) {}
 
 FreeCell::FreeCell(const Board &board) : board(Board(board)) {}
+
+std::string FreeCell::boardToString()
+{
+  return board.toString();
+}

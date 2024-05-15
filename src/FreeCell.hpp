@@ -28,7 +28,13 @@ public:
 
     ~Board();
 
-    std::string toString();
+    bool equal(const Board &other) const;
+
+    bool operator==(const Board &other) const;
+
+    bool operator!=(const Board &other) const;
+
+    std::string toString() const;
 
   private:
     static const std::string CARD_SLOT;
@@ -36,7 +42,7 @@ public:
     static const std::string SEPARATOR;
     static const std::string SPACER;
 
-    std::string rowToString(size_t row);
+    std::string rowToString(size_t row) const;
   };
 
   // Initializes a new FreeCell object with a random seed.
@@ -47,6 +53,8 @@ public:
 
   // Initializes a new FreeCell object from an existing FreeCell::Board;
   FreeCell(const Board &board);
+
+  std::string boardToString();
 
   /*
    *  Attempts to move the specified card (and the tablueau below it) to the
