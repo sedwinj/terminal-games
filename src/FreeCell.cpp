@@ -7,9 +7,8 @@ const std::string FreeCell::Board::SPACER(FreeCell::Board::CARD_SLOT.size() + Fr
 
 FreeCell::Board::Board(std::vector<Card *> deck)
 {
-  // TODO: test
   std::vector<Card *>::iterator it = deck.begin();
-  for (int col = 0; it != deck.end(); col = ++col % COLUMNS)
+  for (int col = 0; it != deck.end(); ++col %= COLUMNS)
   {
     columns[col].push_back(*it++);
   }
@@ -58,10 +57,10 @@ FreeCell::Board::~Board()
     Util::deleteAll(column);
 }
 
-std::string FreeCell::Board::rowToString(int row)
+std::string FreeCell::Board::rowToString(size_t row)
 {
   std::string rowStr = SPACER;
-  for (int col = 0; col < columns.size(); col++)
+  for (size_t col = 0; col < columns.size(); col++)
   {
     if (columns[col].size() > row)
     {
@@ -132,8 +131,8 @@ std::string FreeCell::Board::toString()
 
 FreeCell::FreeCell() : FreeCell(std::random_device{}()) {}
 
-FreeCell::FreeCell(int seed) : seed(seed),
-                               board(Board(Card::buildShuffledDeck(seed))) {}
+FreeCell::FreeCell(int seed) : board(Board(Card::buildShuffledDeck(seed))),
+                               seed(seed) {}
 
 FreeCell::FreeCell(const Board &board) : board(Board(board)) {}
 

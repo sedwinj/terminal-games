@@ -52,7 +52,7 @@ namespace Util
   template <class T>
   inline void deleteAll(std::vector<T *> &objects)
   {
-    for (int idx = 0; idx < objects.size(); idx++)
+    for (size_t idx = 0; idx < objects.size(); idx++)
     {
       deletePtr(objects[idx]);
       objects[idx] = nullptr;

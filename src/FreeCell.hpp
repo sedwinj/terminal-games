@@ -36,7 +36,7 @@ public:
     static const std::string SEPARATOR;
     static const std::string SPACER;
 
-    std::string rowToString(int row);
+    std::string rowToString(size_t row);
   };
 
   // Initializes a new FreeCell object with a random seed.
