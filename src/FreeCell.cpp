@@ -1,25 +1,48 @@
 #include "FreeCell.hpp"
 
-const std::string FreeCell::Board::CARD_SLOT = "[]";
-const std::string FreeCell::Board::NO_CARD = "  ";
-const std::string FreeCell::Board::SEPARATOR = " ";
-const std::string FreeCell::Board::SPACER(FreeCell::Board::CARD_SLOT.size() + FreeCell::Board::SEPARATOR.size(), ' ');
+using Board = FreeCell::Board;
 
-FreeCell::Board::Board(std::vector<Card *> deck)
+const std::string Board::CARD_SLOT = "[]";
+const std::string Board::NO_CARD = "  ";
+const std::string Board::SEPARATOR = " ";
+const std::string Board::SPACER(Board::CARD_SLOT.size() + Board::SEPARATOR.size(), ' ');
+
+const std::map<std::string, Board::Location> FreeCell::stringToLocationLookup = {
+    {"foundation", Board::Location::FOUNDATIONS},
+
+    {"clubs", Board::Location::FOUNDATIONS},
+    {"diamonds", Board::Location::FOUNDATIONS},
+    {"hearts", Board::Location::FOUNDATIONS},
+    {"spades", Board::Location::FOUNDATIONS},
+
+    {"c", Board::Location::FOUNDATIONS},
+    {"d", Board::Location::FOUNDATIONS},
+    {"h", Board::Location::FOUNDATIONS},
+    {"s", Board::Location::FOUNDATIONS},
+
+    {"freecell", Board::Location::FREE_CELLS},
+    {"freecells", Board::Location::FREE_CELLS},
+    {"free cell", Board::Location::FREE_CELLS},
+    {"free cells", Board::Location::FREE_CELLS},
+    {"free", Board::Location::FREE_CELLS},
+    {"[]", Board::Location::FREE_CELLS},
+};
+
+Board::Board(std::vector<Card *> deck)
 {
   std::vector<Card *>::iterator it = deck.begin();
-  for (int col = 0; it != deck.end(); ++col %= COLUMNS)
+  for (int col = 0; it != deck.end(); ++col %= CASCADE_COUNT)
   {
-    columns[col].push_back(*it++);
+    cascades[col].push_back(*it++);
   }
 
   freeCells.fill(nullptr);
 }
 
-FreeCell::Board::Board(const Board &other)
+Board::Board(const Board &other)
 {
   // Foundations
-  for (int idx; idx < FOUNDATIONS; idx++)
+  for (int idx; idx < FOUNDATION_SIZE; idx++)
   {
     foundations[idx] = std::vector<Card *>();
     for (auto card : foundations[idx])
@@ -29,24 +52,24 @@ FreeCell::Board::Board(const Board &other)
   }
 
   // FreeCells
-  for (int idx = 0; idx < FREE_CELLS; idx++)
+  for (int idx = 0; idx < FREE_CELL_SIZE; idx++)
   {
     Card *card = other.freeCells[idx];
     freeCells[idx] = card != nullptr ? new Card(*card) : nullptr;
   }
 
-  // Columns
-  for (int col = 0; col < COLUMNS; col++)
+  // Cascades
+  for (int col = 0; col < CASCADE_COUNT; col++)
   {
-    columns[col] = std::vector<Card *>();
-    for (auto card : other.columns[col])
+    cascades[col] = std::vector<Card *>();
+    for (auto card : other.cascades[col])
     {
-      columns[col].push_back(new Card(*card));
+      cascades[col].push_back(new Card(*card));
     }
   }
 }
 
-FreeCell::Board::~Board()
+Board::~Board()
 {
   for (auto foundation : foundations)
     Util::deleteAll(foundation);
@@ -54,11 +77,11 @@ FreeCell::Board::~Board()
   for (Card *card : freeCells)
     delete card;
 
-  for (auto column : columns)
+  for (auto column : cascades)
     Util::deleteAll(column);
 }
 
-bool FreeCell::Board::columnsEqual(const Columns &col1, const Columns &col2)
+bool Board::columnsEqual(const Cascades &col1, const Cascades &col2)
 {
   for (size_t idx = 0; idx < col1.size(); idx++)
   {
@@ -77,38 +100,96 @@ bool FreeCell::Board::columnsEqual(const Columns &col1, const Columns &col2)
   return true;
 }
 
-bool FreeCell::Board::equal(const Board &other) const
+bool Board::equal(const Board &other) const
 {
   return foundations == other.foundations &&
          freeCells == other.freeCells &&
-         columnsEqual(columns, other.columns);
+         columnsEqual(cascades, other.cascades);
 }
 
-bool FreeCell::Board::operator==(const Board &other) const
+Board::SearchResult Board::find(const Card &card) const
+{
+  // TODO: test
+  SearchResult res;
+
+  // Search foundations
+  if (foundations[card.getSuit()].size() >= card.getValue())
+  {
+    res.found = true;
+    res.location = FOUNDATIONS;
+    res.position.push_back(card.getValue() - 1);
+    res.accessible = foundations[card.getSuit()].size() == card.getValue() - 1;
+
+    return res;
+  }
+
+  // Search free cells
+  int freeCellCount = 0;
+  for (size_t idx = 0; idx < freeCells.size(); idx++)
+  {
+    if (freeCells[idx] == nullptr)
+    {
+      freeCellCount++;
+      continue;
+    }
+
+    if (*freeCells[idx] == card)
+    {
+      res.found = true;
+      res.location = FREE_CELLS;
+      res.position.push_back(idx);
+      res.accessible = true;
+
+      return res;
+    }
+  }
+
+  // Search cascades
+  for (size_t idx = 0; idx < cascades.size(); idx++)
+  {
+    for (size_t jdx = 0; jdx < cascades[idx].size(); jdx++)
+    {
+      if (*cascades[idx][jdx] == card)
+      {
+        res.found = true;
+        res.location = CASCADES;
+        res.position.push_back(idx);
+        res.position.push_back(jdx);
+        res.accessible = freeCellCount >= cascades[idx].size() - jdx;
+
+        return res;
+      }
+    }
+  }
+
+  return res;
+}
+
+bool Board::operator==(const Board &other) const
 {
   return this->equal(other);
 }
 
-bool FreeCell::Board::operator!=(const Board &other) const
+bool Board::operator!=(const Board &other) const
 {
   return !this->equal(other);
 }
 
-std::string FreeCell::Board::rowToString(size_t row) const
+std::string Board::rowToString(size_t row) const
 {
   std::string rowStr = SPACER;
-  for (size_t col = 0; col < columns.size(); col++)
+  for (size_t col = 0; col < cascades.size(); col++)
   {
-    if (columns[col].size() > row)
+    if (cascades[col].size() > row)
     {
-      rowStr += columns[col][row]->toSymbol();
+      rowStr += cascades[col][row]->toSymbol();
     }
     else
     {
       rowStr += row > 0 ? NO_CARD : CARD_SLOT;
     }
 
-    if (col < columns.size() - 1)
+    if (col < cascades.size() - 1)
     {
       rowStr += SEPARATOR;
     }
@@ -118,7 +199,73 @@ std::string FreeCell::Board::rowToString(size_t row) const
   return rowStr;
 }
 
-std::string FreeCell::Board::toString() const
+Board::SearchResult Board::find(std::string str)
+{
+  // TODO: test
+
+  // TODO: Is there a nicer way to do this?
+
+  str = Util::stringTrim(str);
+  SearchResult res;
+
+  // Handles all card targets.
+  try
+  {
+    Card card = Card(str);
+    return find(card);
+  }
+  catch (const std::invalid_argument &e)
+  {
+    // Do nothing
+  }
+
+  // Handles general foundation and free cell targets.
+  auto finder = stringToLocationLookup.find(Util::stringLower(str));
+  if (finder != stringToLocationLookup.end())
+  {
+    res.found = true;
+    res.location = finder->second;
+    res.accessible = true;
+
+    return res;
+  }
+
+  // Handles insertion to general empty cascade
+  if (str == "c")
+  {
+    for (int idx = 0; idx < cascades.size(); idx++)
+    {
+      if (cascades[idx].size() == 0)
+      {
+        res.found = true;
+        res.location = CASCADES;
+        res.position.push_back(idx);
+        res.accessible = true;
+
+        return res;
+      }
+    }
+  }
+
+  // Handles insertion to specific cascade
+  if (str[0] == 'c' && str.size() == 2)
+  {
+    int cascade = std::atoi(str.substr(1).c_str());
+    if (cascades[cascade].size() == 0)
+    {
+      res.found = true;
+      res.location = CASCADES;
+      res.position.push_back(cascade);
+      res.accessible = true;
+
+      return res;
+    }
+  }
+
+  throw std::invalid_argument("Could not parse target location (\"" + str + "\")");
+}
+
+std::string Board::toString() const
 {
   std::string boardString = "";
 
@@ -136,7 +283,7 @@ std::string FreeCell::Board::toString() const
     boardString += SEPARATOR;
   }
   boardString += SPACER + SPACER;
-  for (int idx = 0; idx < FREE_CELLS; idx++)
+  for (int idx = 0; idx < FREE_CELL_SIZE; idx++)
   {
     if (freeCells[idx] != nullptr)
     {
@@ -147,7 +294,7 @@ std::string FreeCell::Board::toString() const
       boardString += CARD_SLOT;
     }
 
-    if (idx < FREE_CELLS - 1)
+    if (idx < FREE_CELL_SIZE - 1)
     {
       boardString += SEPARATOR;
     }
@@ -173,7 +320,17 @@ FreeCell::FreeCell(int seed) : board(Board(Card::buildShuffledDeck(seed))),
 
 FreeCell::FreeCell(const Board &board) : board(Board(board)) {}
 
-std::string FreeCell::boardToString()
+std::string FreeCell::boardToString() const
 {
   return board.toString();
+}
+
+bool FreeCell::move(const std::string &card, std::string location)
+{
+  // TODO: implement
+  Board::SearchResult res = board.find(card);
+  if (!res.accessible)
+  {
+    return false;
+  }
 }
