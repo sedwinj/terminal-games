@@ -124,15 +124,8 @@ Board::SearchResult Board::find(const Card &card) const
   }
 
   // Search free cells
-  int freeCellCount = 0;
   for (size_t idx = 0; idx < freeCells.size(); idx++)
   {
-    if (freeCells[idx] == nullptr)
-    {
-      freeCellCount++;
-      continue;
-    }
-
     if (*freeCells[idx] == card)
     {
       res.found = true;
@@ -155,7 +148,8 @@ Board::SearchResult Board::find(const Card &card) const
         res.location = CASCADES;
         res.position.push_back(idx);
         res.position.push_back(jdx);
-        res.accessible = freeCellCount >= cascades[idx].size() - jdx;
+        res.accessible = freeCellCount >= cascades[idx].size() - jdx &&
+                         isValidTableau(std::vector<Card *>(cascades[idx].begin() + jdx, cascades[idx].end()));
 
         return res;
       }
@@ -225,12 +219,11 @@ Board::SearchResult Board::find(std::string str)
   {
     res.found = true;
     res.location = finder->second;
-    res.accessible = true;
 
     return res;
   }
 
-  // Handles insertion to general empty cascade
+  // Handles lookup of general empty cascade
   if (str == "c")
   {
     for (int idx = 0; idx < cascades.size(); idx++)
@@ -248,7 +241,7 @@ Board::SearchResult Board::find(std::string str)
   }
 
   // Handles insertion to specific cascade
-  if (str[0] == 'c' && str.size() == 2)
+  if (str[0] == 'c' && Util::isNumeric(str.substr(1)))
   {
     int cascade = std::atoi(str.substr(1).c_str());
     if (cascades[cascade].size() == 0)
@@ -263,6 +256,53 @@ Board::SearchResult Board::find(std::string str)
   }
 
   throw std::invalid_argument("Could not parse target location (\"" + str + "\")");
+}
+
+void Board::move(Location cardLoc, std::vector<int> cardPos,
+                 Location targetLoc, std::vector<int> targetPos)
+{
+  // TODO: test
+  std::vector<Card *> buffer;
+
+  // Remove card(s)
+  if (cardLoc == Location::FOUNDATIONS)
+  {
+    buffer.push_back(foundations[cardPos[0]].back());
+    foundations[cardPos[0]].pop_back();
+  }
+  else if (cardLoc == Location::FREE_CELLS)
+  {
+    buffer.push_back(freeCells[cardPos[0]]);
+    freeCells[cardPos[0]] = nullptr;
+  }
+  else
+  {
+    while (cascades[targetPos[0]].size() <= targetPos[1])
+    {
+      buffer.push_back(cascades[0].back());
+      cascades[0].pop_back();
+    }
+  }
+
+  // Place card(s)
+  if (cardLoc == Location::FOUNDATIONS)
+  {
+    foundations[targetPos[0]].push_back(buffer.back());
+    buffer.pop_back();
+  }
+  else if (cardLoc == Location::FREE_CELLS)
+  {
+    freeCells[targetPos[0]] = buffer.back();
+    buffer.pop_back();
+  }
+  else
+  {
+    while (buffer.size() > 0)
+    {
+      cascades[targetPos[0]].push_back(buffer.back());
+      buffer.pop_back();
+    }
+  }
 }
 
 std::string Board::toString() const
@@ -325,12 +365,87 @@ std::string FreeCell::boardToString() const
   return board.toString();
 }
 
-bool FreeCell::move(const std::string &card, std::string location)
+bool FreeCell::isValidTableau(const std::vector<Card *> &tableau)
 {
-  // TODO: implement
+  Card *lastCard = nullptr;
+  for (Card *card : tableau)
+  {
+    if (!lastCard)
+    {
+      lastCard = card;
+      continue;
+    }
+
+    if (card->isRed() == lastCard->isRed() ||
+        card->getValue() != lastCard->getValue() - 1)
+    {
+      return false;
+    }
+
+    lastCard = card;
+  }
+
+  return true;
+}
+
+void FreeCell::move(const std::string &cardStr, std::string target)
+{
+  // TODO: test
+  Card card = Card(cardStr);
   Board::SearchResult res = board.find(card);
   if (!res.accessible)
   {
-    return false;
+    throw IllegalGameMove("Card to move is inaccessible");
+  }
+
+  Board::SearchResult targetRes = board.find(target);
+
+  /*
+   * Throw IllegalGameMove if card to move to  a foundation or free cell isn't
+   * immediately accessible
+   */
+  if (res.location == Board::Location::CASCADES &&
+      res.position[1] != board.cascades[res.position[0]].size() - 1 &&
+      (targetRes.location == Board::Location::FOUNDATIONS ||
+       targetRes.location == Board::Location::FREE_CELLS))
+  {
+    throw IllegalGameMove("Card is not immediately accessible.");
+  }
+
+  // Move card to resepective foundation
+  if (targetRes.location == Board::Location::FOUNDATIONS)
+  {
+    if (card.getValue() != board.foundations[card.getSuit()].back()->getValue() + 1)
+    {
+      throw IllegalGameMove("Card cannot be placed on foundation.");
+    }
+
+    std::vector<int> targetPos;
+    targetPos.push_back(card.getSuit());
+    board.move(res.location, res.position, targetRes.location, targetPos);
+  }
+
+  // Move card to a free cell
+  else if (targetRes.location == Board::Location::FREE_CELLS)
+  {
+    if (board.freeCellCount == 0)
+    {
+      throw IllegalGameMove("There is no free cell to place the card.");
+    }
+
+    std::vector<int> targetPos;
+    targetPos.push_back(0);
+    for (; board.freeCells[targetPos[0]] != nullptr; targetPos[0]++)
+    {
+      // Do nothing. Increment targetPos.
+    }
+
+    board.move(res.location, res.position, targetRes.location, targetPos);
+  }
+
+  // Move card to a cascade
+  else
+  {
+    board.move(res.location, res.position, targetRes.location, targetRes.position);
   }
 }

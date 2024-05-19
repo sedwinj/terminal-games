@@ -6,6 +6,7 @@
 
 #include "Card.hpp"
 #include "Util.hpp"
+#include "exception/IllegalGameMove.hpp"
 
 class FreeCell
 {
@@ -46,6 +47,8 @@ public:
     static const std::string SEPARATOR;
     static const std::string SPACER;
 
+    int freeCellCount = FREE_CELL_SIZE;
+
     enum Location
     {
       CASCADES,
@@ -71,13 +74,23 @@ public:
     SearchResult find(const Card &card) const;
 
     /*
-     * Parses the input to find a suitable location. The returned SearchResult
-     * will lack position data if the input parses to the foundations or free
-     * cells in general.
+     * Parses the input to find a suitable location.
+     *
+     * The returned SearchResult will lack position data and accessibility will
+     * be undefined if the input parses to the foundations or free cells.
      *
      * Throws an invalid_argument exception on failed parse.
      */
     SearchResult find(std::string str);
+
+    /*
+     * Moves the card (and any cards beneath) from one position to another.
+     * Assumes all inputs are valid.
+     *
+     * Undefined behavior for invalid inputs and moves.
+     */
+    void move(Location cardLoc, std::vector<int> cardPos, Location targetLoc,
+              std::vector<int> targetPos);
 
     std::string rowToString(size_t row) const;
   };
@@ -96,14 +109,18 @@ public:
   /*
    *  Attempts to move the specified card (and the tablueau below it) to the
    *  specified position, according to FreeCell game rules. Moves the card(s)
-   *  and returns true if the action was valid and successful. Has no effect and
-   *  returns false otherwise.
+   *  if the action was valid and successful.
+   *
+   * Throws IllegalGameMove if the action is invalid. Does not alter the board
+   * if this is the case.
    */
-  bool move(const std::string &card, std::string position);
+  void move(const std::string &card, std::string target);
 
 private:
   static const std::map<std::string, Board::Location> stringToLocationLookup;
 
   Board board;
   int seed;
+
+  static bool isValidTableau(const std::vector<Card *> &tableau);
 };
