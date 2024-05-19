@@ -34,6 +34,33 @@ TEST_CASE("deletePtr updates ptr to nullptr", "[Util::deletePtr]")
   CHECK(ptr == nullptr);
 }
 
+TEST_CASE("accurately identify numeric strings", "[Util::isNumeric]")
+{
+  std::string str0 = "";
+  std::string str1 = " ";
+  std::string str2 = "+";
+  std::string str3 = "-";
+  std::string str4 = "-test";
+  std::string str5 = "+test";
+  std::string str6 = "test";
+  std::string str7 = "123";
+  std::string str8 = " 123";
+  std::string str9 = "-123";
+  std::string str10 = "+123";
+
+  CHECK(Util::isNumeric(str0) == false);
+  CHECK(Util::isNumeric(str1) == false);
+  CHECK(Util::isNumeric(str2) == false);
+  CHECK(Util::isNumeric(str3) == false);
+  CHECK(Util::isNumeric(str4) == false);
+  CHECK(Util::isNumeric(str5) == false);
+  CHECK(Util::isNumeric(str6) == false);
+  CHECK(Util::isNumeric(str7) == true);
+  CHECK(Util::isNumeric(str8) == false);
+  CHECK(Util::isNumeric(str9) == true);
+  CHECK(Util::isNumeric(str10) == true);
+}
+
 TEST_CASE("convert string to lowercase", "[Util::stringLower]")
 {
   std::string word = "WoRd";

@@ -13,8 +13,8 @@ namespace Util
   inline void deleteAll(std::initializer_list<T *> objects);
   template <class T>
   inline void deleteAll(std::vector<T *> &objects);
+  inline bool isNumeric(const std::string &str);
   inline std::string stringLower(const std::string &in);
-
   inline std::vector<std::string> stringSplit(const std::string &str);
   inline std::vector<std::string> stringSplit(const std::string &str, const std::string &delim);
   inline std::string stringTrim(const std::string &str);
@@ -57,6 +57,35 @@ namespace Util
       deletePtr(objects[idx]);
       objects[idx] = nullptr;
     }
+  }
+
+  // Returns true if the input is numeric. Does not ignore any whitespace.
+  inline bool isNumeric(const std::string &str)
+  {
+    if (str.size() == 0)
+    {
+      return false;
+    }
+
+    size_t idx = 0;
+    if (str[idx] == '+' || str[idx] == '-')
+    {
+      if (str.size() == 1)
+      {
+        return false;
+      }
+      idx++;
+    }
+
+    for (; idx < str.size(); idx++)
+    {
+      if (str[idx] < '0' || '9' < str[idx])
+      {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   // Returns a copy of the string with all letters converted to lowercase.
