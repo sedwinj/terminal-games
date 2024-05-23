@@ -39,6 +39,8 @@ public:
 
     bool operator!=(const Board &other) const;
 
+    static Board parse(const std::string &str);
+
     std::string toString() const;
 
   private:
@@ -64,6 +66,8 @@ public:
       std::vector<int> position;
       bool accessible;
     };
+
+    Board();
 
     /*
      * Returns true if two sets of cascades contain equal cards in the equal

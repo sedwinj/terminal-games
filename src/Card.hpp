@@ -13,6 +13,7 @@ class Card
 {
 public:
   static const int MAXVALUE = 13;
+  static const int DECK_SIZE = 52;
 
   // Reverse alphabetical (aka Bridge) order
   enum Suit

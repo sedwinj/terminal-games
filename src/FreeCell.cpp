@@ -52,7 +52,7 @@ Board::Board(const Board &other)
   }
 
   // FreeCells
-  for (int idx = 0; idx < FREE_CELL_SIZE; idx++)
+  for (size_t idx = 0; idx < FREE_CELL_SIZE; idx++)
   {
     Card *card = other.freeCells[idx];
     freeCells[idx] = card != nullptr ? new Card(*card) : nullptr;
@@ -169,6 +169,108 @@ bool Board::operator!=(const Board &other) const
   return !this->equal(other);
 }
 
+Board Board::parse(const std::string &str)
+{
+  // TODO: test
+
+  std::vector<std::string> rows = Util::stringSplit(str, "\n");
+  std::transform(rows.begin(), rows.end(), rows.begin(), Util::stringTrim);
+
+  // Create a sparse 2D array of cards
+  std::vector<std::vector<Card *>> cards;
+  cards.push_back(std::vector<Card *>());
+  for (std::string card : Util::stringSplit(rows[0], " "))
+  {
+    if (card == "")
+    {
+      continue;
+    }
+
+    if (card == CARD_SLOT)
+    {
+      cards.back().push_back(nullptr);
+      continue;
+    }
+
+    cards.back().push_back(Card::parse(card));
+  }
+  for (size_t idx = 1; idx < rows.size(); idx++)
+  {
+    cards.push_back(std::vector<Card *>());
+    std::vector<std::string> row = Util::stringSplit(rows[idx], SEPARATOR);
+    for (size_t jdx = 0; jdx < row.size(); jdx++)
+    {
+      if (row[jdx] == "")
+      {
+        cards.back().push_back(nullptr);
+        idx += CARD_SLOT.size();
+        continue;
+      }
+
+      cards.back().push_back(Card::parse(row[jdx]));
+    }
+  }
+
+  // Define logic to check if a card already exists in the board.
+  std::array<bool, Card::DECK_SIZE> exists;
+  exists.fill(false);
+  auto existenceCheck = [&exists](Card *card) -> void
+  {
+    if (!card)
+    {
+      return;
+    }
+
+    int pos = card->getSuit() * Card::MAXVALUE + card->getValue();
+    if (exists[pos] == true)
+    {
+      throw std::invalid_argument(card->toString() + "already exists");
+    }
+
+    exists[pos] = true;
+  };
+
+  // Convert 2D card array into a board.
+  Board board = Board();
+  for (size_t idx = 0; idx < CASCADE_COUNT; idx++)
+  {
+    Card *card = cards[0][idx];
+    if (card == nullptr)
+    {
+      continue;
+    }
+
+    Card::Suit suit = card->getSuit();
+    for (int value = 1; value < card->getValue(); value++)
+    {
+      Card *impliedCard = new Card(value, suit);
+      existenceCheck(impliedCard);
+      board.foundations[suit].push_back(impliedCard);
+    }
+    board.foundations[suit].push_back(card);
+  }
+
+  for (size_t idx = 1; idx < FREE_CELL_SIZE; idx++)
+  {
+    Card *card = cards[0][FOUNDATION_SIZE + idx];
+    existenceCheck(card);
+    board.freeCells[idx] = card;
+  }
+
+  for (size_t idx = 0; idx < cards.size(); idx++)
+  {
+    std::vector<Card *> row = cards[idx];
+    for (size_t jdx = 0; jdx < cards.size(); jdx++)
+    {
+      Card *card = cards[idx][jdx];
+      existenceCheck(card);
+      board.cascades[jdx].push_back(card);
+    }
+  }
+
+  return board;
+}
+
 std::string Board::rowToString(size_t row) const
 {
   std::string rowStr = SPACER;
@@ -197,7 +299,7 @@ Board::SearchResult Board::find(std::string str)
 {
   // TODO: test
 
-  // TODO: Is there a nicer way to do this?
+  // Is there a nicer way to do this?
 
   str = Util::stringTrim(str);
   SearchResult res;
@@ -226,7 +328,7 @@ Board::SearchResult Board::find(std::string str)
   // Handles lookup of general empty cascade
   if (str == "c")
   {
-    for (int idx = 0; idx < cascades.size(); idx++)
+    for (size_t idx = 0; idx < cascades.size(); idx++)
     {
       if (cascades[idx].size() == 0)
       {
@@ -323,7 +425,7 @@ std::string Board::toString() const
     boardString += SEPARATOR;
   }
   boardString += SPACER + SPACER;
-  for (int idx = 0; idx < FREE_CELL_SIZE; idx++)
+  for (size_t idx = 0; idx < FREE_CELL_SIZE; idx++)
   {
     if (freeCells[idx] != nullptr)
     {
