@@ -5,9 +5,9 @@
 class IllegalGameMove : public std::exception
 {
 public:
-  IllegalGameMove(char *message);
-  char *what();
+  IllegalGameMove(std::string message);
+  const char *what();
 
 private:
-  char *message;
+  const char *message;
 };

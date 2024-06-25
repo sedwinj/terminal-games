@@ -28,6 +28,8 @@ const std::map<std::string, Board::Location> FreeCell::stringToLocationLookup = 
     {"[]", Board::Location::FREE_CELLS},
 };
 
+Board::Board() {}
+
 Board::Board(std::vector<Card *> deck)
 {
   std::vector<Card *>::iterator it = deck.begin();
@@ -113,12 +115,12 @@ Board::SearchResult Board::find(const Card &card) const
   SearchResult res;
 
   // Search foundations
-  if (foundations[card.getSuit()].size() >= card.getValue())
+  if ((int)foundations[card.getSuit()].size() >= card.getValue())
   {
     res.found = true;
     res.location = FOUNDATIONS;
     res.position.push_back(card.getValue() - 1);
-    res.accessible = foundations[card.getSuit()].size() == card.getValue() - 1;
+    res.accessible = (int)foundations[card.getSuit()].size() == card.getValue() - 1;
 
     return res;
   }
@@ -148,7 +150,7 @@ Board::SearchResult Board::find(const Card &card) const
         res.location = CASCADES;
         res.position.push_back(idx);
         res.position.push_back(jdx);
-        res.accessible = freeCellCount >= cascades[idx].size() - jdx &&
+        res.accessible = (size_t)freeCellCount >= cascades[idx].size() - jdx &&
                          isValidTableau(std::vector<Card *>(cascades[idx].begin() + jdx, cascades[idx].end()));
 
         return res;
@@ -379,7 +381,7 @@ void Board::move(Location cardLoc, std::vector<int> cardPos,
   }
   else
   {
-    while (cascades[targetPos[0]].size() <= targetPos[1])
+    while (cascades[cardPos[0]].size() <= (size_t)cardPos[1])
     {
       buffer.push_back(cascades[0].back());
       cascades[0].pop_back();
@@ -387,12 +389,12 @@ void Board::move(Location cardLoc, std::vector<int> cardPos,
   }
 
   // Place card(s)
-  if (cardLoc == Location::FOUNDATIONS)
+  if (targetLoc == Location::FOUNDATIONS)
   {
     foundations[targetPos[0]].push_back(buffer.back());
     buffer.pop_back();
   }
-  else if (cardLoc == Location::FREE_CELLS)
+  else if (targetLoc == Location::FREE_CELLS)
   {
     freeCells[targetPos[0]] = buffer.back();
     buffer.pop_back();
@@ -507,7 +509,7 @@ void FreeCell::move(const std::string &cardStr, std::string target)
    * immediately accessible
    */
   if (res.location == Board::Location::CASCADES &&
-      res.position[1] != board.cascades[res.position[0]].size() - 1 &&
+      (size_t)res.position[1] != board.cascades[res.position[0]].size() - 1 &&
       (targetRes.location == Board::Location::FOUNDATIONS ||
        targetRes.location == Board::Location::FREE_CELLS))
   {

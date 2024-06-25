@@ -1,8 +1,8 @@
 #include "IllegalGameMove.hpp"
 
-IllegalGameMove::IllegalGameMove(char *message) : message(message) {}
+IllegalGameMove::IllegalGameMove(std::string message) : message(message.c_str()) {}
 
-char *IllegalGameMove::what()
+const char *IllegalGameMove::what()
 {
   return message;
 }
